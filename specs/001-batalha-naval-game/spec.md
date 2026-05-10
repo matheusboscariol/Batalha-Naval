@@ -107,6 +107,9 @@ funciona.
   feedback visual; o turno não é consumido.
 - O que acontece se o timer ultrapassar 300 segundos? → O bônus de tempo fica em 0; o
   jogo continua normalmente sem interrupção.
+- O que acontece quando um navio inimigo é afundado? → Todas as células do navio são
+  reveladas visualmente no tabuleiro da IA (silhueta do navio exibida com estado
+  `.afundado-visivel`), permitindo ao jogador confirmar o afundamento.
 - O que acontece se o jogador clicar durante uma animação? → O clique é ignorado; o
   input só é aceito após a animação corrente completar.
 - O que acontece se o jogador tentar posicionar um navio parcialmente fora do tabuleiro?
@@ -158,17 +161,10 @@ funciona.
 - **FR-013**: O sistema DEVE calcular a pontuação final com a fórmula:
   - Pontuação Base = nível × 1000
   - Bônus de Tempo = max(0, 300 − segundos_decorridos) × 10
-  - Bônus de Precisão = (acertos / tiros_totais) × 500
+  - Bônus de Precisão = Math.round((acertos / tiros_totais) × 500)
   - Total = Pontuação Base + Bônus de Tempo + Bônus de Precisão
 - **FR-014**: A interface DEVE apresentar dois tabuleiros lado a lado em telas largas e
   empilhados verticalmente em dispositivos móveis, sem scroll horizontal.
-- **FR-019**: A interface DEVE seguir tema naval/militar clássico: paleta de azul oceano
-  e cinza aço, elementos visuais de radar e mapa, navios representados como silhuetas
-  metálicas e células de água como grade sobre fundo oceânico.
-- **FR-020**: O sistema DEVE registrar um evento de aviso de saída nativo do browser
-  (beforeunload) quando uma partida estiver ativa (fase de posicionamento ou batalha),
-  exibindo a mensagem padrão de confirmação antes de permitir o fechamento ou recarga
-  da página. O aviso DEVE ser removido ao atingir a tela de resultado.
 - **FR-015**: Ao vencer um nível N < 5, o sistema DEVE oferecer o botão "Avançar para
   o Nível N+1", iniciando a fase de posicionamento do próximo nível com o nível corrente
   atualizado em memória.
@@ -181,7 +177,15 @@ funciona.
 - **FR-018**: O sistema DEVE exibir animações elaboradas para cada evento de combate:
   projétil animado movendo-se da origem até a célula alvo; explosão ao acertar ou
   afundar um navio; respingo ao errar. O input do jogador DEVE ser bloqueado durante
-  a duração de cada animação para evitar ações sobrepostas.
+  a duração de cada animação para evitar ações sobrepostas. Para ataques da IA, a
+  origem da animação é um ponto fixo na borda oposta do tabuleiro do jogador.
+- **FR-019**: A interface DEVE seguir tema naval/militar clássico: paleta de azul oceano
+  e cinza aço, elementos visuais de radar e mapa, navios representados como silhuetas
+  metálicas e células de água como grade sobre fundo oceânico.
+- **FR-020**: O sistema DEVE registrar um evento de aviso de saída nativo do browser
+  (beforeunload) quando uma partida estiver ativa (fase de posicionamento ou batalha),
+  exibindo a mensagem padrão de confirmação antes de permitir o fechamento ou recarga
+  da página. O aviso DEVE ser removido ao atingir a tela de resultado.
 
 ### Key Entities
 
