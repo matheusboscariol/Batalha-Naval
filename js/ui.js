@@ -183,6 +183,13 @@ function _registrarEventosNavioeLista(handlers) {
     const item = e.target.closest('.item-navio:not(.posicionado)');
     if (item) handlers.onSelecionarNavio(Number(item.dataset.index));
   });
+  lista.addEventListener('touchend', e => {
+    const item = e.target.closest('.item-navio:not(.posicionado)');
+    if (item) {
+      e.preventDefault();
+      handlers.onSelecionarNavio(Number(item.dataset.index));
+    }
+  }, { passive: false });
 }
 
 function _registrarEventosGrade(handlers) {
@@ -196,11 +203,32 @@ function _registrarEventosGrade(handlers) {
     const cel = e.target.closest('.celula');
     if (cel) handlers.onPosicionar(Number(cel.dataset.linha), Number(cel.dataset.coluna));
   });
+  grade.addEventListener('touchstart', e => {
+    const touch = e.changedTouches[0];
+    const cel = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.celula');
+    if (cel) handlers.onHover(Number(cel.dataset.linha), Number(cel.dataset.coluna));
+  }, { passive: true });
+  grade.addEventListener('touchend', e => {
+    const touch = e.changedTouches[0];
+    const cel = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.celula');
+    handlers.onHover(null, null);
+    if (cel) {
+      e.preventDefault();
+      handlers.onPosicionar(Number(cel.dataset.linha), Number(cel.dataset.coluna));
+    }
+  }, { passive: false });
+  grade.addEventListener('touchcancel', () => handlers.onHover(null, null));
 }
 
 function _registrarEventosBotoes(handlers) {
   document.getElementById('btn-rotacionar').addEventListener('click', () => handlers.onRotacionar());
-  document.getElementById('btn-iniciar-batalha').addEventListener('click', () => handlers.onIniciarBatalha());
+  const btnBatalha = document.getElementById('btn-iniciar-batalha');
+  btnBatalha.addEventListener('click', () => handlers.onIniciarBatalha());
+  btnBatalha.addEventListener('touchend', e => {
+    if (btnBatalha.disabled) return;
+    e.preventDefault();
+    handlers.onIniciarBatalha();
+  }, { passive: false });
   document.addEventListener('keydown', e => {
     if (e.key === 'r' || e.key === 'R') handlers.onRotacionar();
   });
@@ -297,10 +325,20 @@ export function registrarEventosCelula(callback) {
   const gradeIA = document.getElementById('grade-ia');
   gradeIA.removeEventListener('click', _onClickGradeIA);
   gradeIA.addEventListener('click', _onClickGradeIA);
+  gradeIA.removeEventListener('touchend', _onTouchEndGradeIA);
+  gradeIA.addEventListener('touchend', _onTouchEndGradeIA, { passive: false });
 }
 
 function _onClickGradeIA(e) {
   const cel = e.target.closest('.celula.clicavel');
   if (!cel || !_callbackCelula) return;
+  _callbackCelula(Number(cel.dataset.linha), Number(cel.dataset.coluna));
+}
+
+function _onTouchEndGradeIA(e) {
+  const touch = e.changedTouches[0];
+  const cel = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.celula.clicavel');
+  if (!cel || !_callbackCelula) return;
+  e.preventDefault();
   _callbackCelula(Number(cel.dataset.linha), Number(cel.dataset.coluna));
 }

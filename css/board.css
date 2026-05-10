@@ -35,6 +35,7 @@
   min-width: 44px;
   min-height: 44px;
   transition: background 0.12s;
+  touch-action: manipulation;
 }
 
 /* ── Célula clicável ─────────────────────────────────────────────────────── */

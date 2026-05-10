@@ -197,6 +197,7 @@ body::after {
   justify-content: center;
   transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
   user-select: none;
+  touch-action: manipulation;
 }
 
 .item-navio:hover {
@@ -375,6 +376,7 @@ body::after {
   font-family: inherit;
   transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
   user-select: none;
+  touch-action: manipulation;
 }
 
 .btn:active { transform: scale(0.96); }
