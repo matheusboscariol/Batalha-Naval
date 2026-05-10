@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batalha Naval</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/board.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- Tela 1: Boas-Vindas -->
+  <section id="tela-boas-vindas" class="tela ativa">
+    <div class="conteudo-centralizado">
+      <h1 class="titulo-jogo">⚓ Batalha Naval</h1>
+      <p class="subtitulo">Afunde a frota inimiga antes que afundem a sua</p>
+      <button id="btn-iniciar" class="btn btn-primario">Iniciar Jogo</button>
+    </div>
+  </section>
+
+  <!-- Tela 2: Posicionamento de Navios -->
+  <section id="tela-posicionamento" class="tela">
+    <header class="cabecalho-fase">
+      <h2 id="titulo-posicionamento">Nível 1 — Recruta</h2>
+      <p class="instrucao">Posicione seus navios no tabuleiro</p>
+      <button id="btn-som-posicionamento" class="btn-som" title="Ativar/Desativar Som" aria-label="Ativar/Desativar Som">🔊</button>
+    </header>
+    <div class="area-posicionamento">
+      <div class="painel-navios">
+        <h3>Seus Navios</h3>
+        <ul id="lista-navios"></ul>
+        <button id="btn-rotacionar" class="btn btn-secundario" disabled>↻ Rotacionar (R)</button>
+      </div>
+      <div class="area-grade">
+        <div id="grade-posicionamento" class="grade"></div>
+      </div>
+    </div>
+    <div class="acoes-posicionamento">
+      <button id="btn-iniciar-batalha" class="btn btn-primario" disabled>Iniciar Batalha</button>
+    </div>
+  </section>
+
+  <!-- Tela 3: Batalha -->
+  <section id="tela-batalha" class="tela">
+    <header class="cabecalho-fase">
+      <div id="indicador-turno" class="indicador-turno">Seu turno</div>
+      <div class="info-batalha">
+        <span id="nivel-batalha" class="info-nivel"></span>
+        <span id="timer" class="info-timer">00:00</span>
+        <span id="pontuacao-estimada" class="info-pontuacao">0 pts</span>
+        <button id="btn-som" class="btn-som" title="Ativar/Desativar Som" aria-label="Ativar/Desativar Som">🔊</button>
+      </div>
+    </header>
+    <div class="arena-batalha">
+      <div class="lado-jogador">
+        <h3>Seu Tabuleiro</h3>
+        <div id="grade-jogador" class="grade"></div>
+      </div>
+      <div class="lado-ia">
+        <h3>Tabuleiro Inimigo</h3>
+        <div id="grade-ia" class="grade"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tela 4: Resultado -->
+  <section id="tela-resultado" class="tela">
+    <div class="conteudo-resultado">
+      <h2 id="mensagem-resultado"></h2>
+      <div id="detalhes-pontuacao" class="detalhes-pontuacao"></div>
+      <div class="acoes-resultado">
+        <button id="btn-acao-resultado" class="btn btn-primario"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Camada para animações de projétil -->
+  <div id="camada-animacao"></div>
+
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>

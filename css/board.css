@@ -1,0 +1,232 @@
+/* ── Variáveis de renderização ──────────────────────────────────────────── */
+:root {
+  --grid-size: 5;
+  --hull-grad: linear-gradient(
+    155deg,
+    #c8d5db 0%, #9ab0bb 18%,
+    #6e8fa0 45%, #4a6477 72%, #2e4253 100%
+  );
+}
+
+/* ── Grade ──────────────────────────────────────────────────────────────── */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-size), 1fr);
+  grid-template-rows:    repeat(var(--grid-size), 1fr);
+  gap: 2px;
+  background: #021220;
+  padding: 2px;
+  border-radius: 4px;
+  border: 2px solid rgba(41, 128, 185, 0.18);
+  width:  min(calc(var(--grid-size) * 48px), 90vw);
+  height: min(calc(var(--grid-size) * 48px), 90vw);
+  box-shadow:
+    0 0 0 1px rgba(41, 128, 185, 0.06),
+    0 0 50px rgba(0, 25, 60, 0.8),
+    inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Célula: oceano ─────────────────────────────────────────────────────── */
+.celula {
+  background: linear-gradient(145deg, #0d3562 0%, #0a2744 65%, #071d36 100%);
+  position: relative;
+  cursor: default;
+  overflow: hidden;
+  min-width: 44px;
+  min-height: 44px;
+  transition: background 0.12s;
+}
+
+/* ── Célula clicável ─────────────────────────────────────────────────────── */
+.celula.clicavel { cursor: crosshair; }
+.celula.clicavel:hover {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(52, 152, 219, 0.42) 0%,
+    #0d3461 65%
+  );
+}
+
+/* ── Ghost: prévia de posicionamento ─────────────────────────────────────── */
+.celula.ghost-valido {
+  background: rgba(0, 168, 107, 0.28);
+  box-shadow: inset 0 0 0 2px rgba(0, 200, 130, 0.5);
+}
+.celula.ghost-invalido {
+  background: rgba(192, 57, 43, 0.3);
+  box-shadow: inset 0 0 0 2px rgba(220, 70, 60, 0.5);
+}
+
+/* ── Navio colocado (base, sem posição específica ainda) ─────────────────── */
+.celula.navio-posicionado {
+  background: linear-gradient(145deg, #0d3562 0%, #0a2744 100%);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   NAVIOS: casco via ::before · superestrutura via ::after
+   A variável --hull-grad é sobrescrita nos estados de combate.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Casco horizontal (nave ocupa 56 % da altura da célula) ─────────────── */
+.celula.navio-h-inicio::before,
+.celula.navio-h-meio::before,
+.celula.navio-h-fim::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 22%; bottom: 22%; left: 0; right: 0;
+  background: var(--hull-grad);
+  box-shadow:
+    inset 0  3px 3px rgba(255, 255, 255, 0.28),
+    inset 0 -3px 3px rgba(0, 0, 0, 0.50);
+}
+
+/* Proa horizontal — ponta afilada à esquerda */
+.celula.navio-h-inicio::before {
+  clip-path: polygon(28% 0%, 100% 0%, 100% 100%, 28% 100%, 0% 50%);
+}
+/* Popa horizontal — levemente arredondada à direita */
+.celula.navio-h-fim::before {
+  clip-path: polygon(0% 0%, 88% 0%, 100% 22%, 100% 78%, 88% 100%, 0% 100%);
+}
+
+/* ── Casco vertical (nave ocupa 56 % da largura da célula) ──────────────── */
+.celula.navio-v-inicio::before,
+.celula.navio-v-meio::before,
+.celula.navio-v-fim::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 0; bottom: 0; left: 22%; right: 22%;
+  background: var(--hull-grad);
+  box-shadow:
+    inset  3px 0 3px rgba(255, 255, 255, 0.28),
+    inset -3px 0 3px rgba(0, 0, 0, 0.50);
+}
+
+/* Proa vertical — ponta afilada no topo */
+.celula.navio-v-inicio::before {
+  clip-path: polygon(0% 28%, 50% 0%, 100% 28%, 100% 100%, 0% 100%);
+}
+/* Popa vertical — levemente arredondada embaixo */
+.celula.navio-v-fim::before {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 88%, 78% 100%, 22% 100%, 0% 88%);
+}
+
+/* ── Navio de célula única ────────────────────────────────────────────────── */
+.celula.navio-unico::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 20%; bottom: 20%; left: 20%; right: 20%;
+  border-radius: 50%;
+  background: var(--hull-grad);
+  box-shadow:
+    inset 0  3px 3px rgba(255, 255, 255, 0.3),
+    inset 0 -3px 3px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Superestrutura (célula central de navios grandes) ───────────────────── */
+.celula.navio-h-meio::after,
+.celula.navio-v-meio::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  border-radius: 2px;
+  background: linear-gradient(
+    135deg,
+    rgba(205, 220, 228, 0.72) 0%,
+    rgba(105, 135, 152, 0.72) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 1px 3px rgba(0, 0, 0, 0.55);
+}
+.celula.navio-h-meio::after { top: 32%; bottom: 32%; left: 18%; right: 18%; }
+.celula.navio-v-meio::after { top: 18%; bottom: 18%; left: 32%; right: 32%; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   ESTADOS DE COMBATE
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Acertado — casco muda para tons de brasa */
+.celula.acertada {
+  --hull-grad: linear-gradient(155deg, #f5a623 0%, #e74c3c 45%, #922b21 100%);
+  background: radial-gradient(circle at 50% 50%, #aa3226 0%, #6c1b14 100%);
+}
+/* Brasas pulsando por cima de tudo */
+.celula.acertada::after {
+  content: '';
+  position: absolute;
+  inset: 0; z-index: 3;
+  background: radial-gradient(
+    circle at 38% 28%,
+    rgba(255, 170, 0, 0.58) 0%,
+    transparent 62%
+  );
+  animation: brasas 1.8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes brasas {
+  from { opacity: 0.28; transform: scale(0.88); }
+  to   { opacity: 0.88; transform: scale(1.12); }
+}
+
+/* Errado — respingo d'água */
+.celula.errada {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(110, 180, 230, 0.32) 0%, transparent 55%),
+    linear-gradient(145deg, #0d3461 0%, #0a2744 100%);
+}
+.celula.errada::after {
+  content: '◦';
+  position: absolute;
+  inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  color: rgba(110, 190, 240, 0.60);
+  background: none;
+}
+
+/* Afundado (navio do jogador destruído) */
+.celula.afundado {
+  --hull-grad: linear-gradient(155deg, #5d2020 0%, #2c0e0e 100%);
+  background: #070202;
+}
+.celula.afundado::after {
+  content: '';
+  position: absolute;
+  inset: 0; z-index: 3;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 4px,
+    rgba(90, 15, 15, 0.38) 4px, rgba(90, 15, 15, 0.38) 5px
+  );
+  pointer-events: none;
+}
+
+/* Silhueta de navio inimigo afundado revelada */
+.celula.afundado-visivel {
+  --hull-grad: linear-gradient(
+    155deg, rgba(210, 68, 52, 0.55) 0%, rgba(110, 25, 25, 0.55) 100%
+  );
+  background: linear-gradient(145deg, #0d3562 0%, #0a2744 100%);
+}
+.celula.afundado-visivel.navio-h-inicio::before,
+.celula.afundado-visivel.navio-h-meio::before,
+.celula.afundado-visivel.navio-h-fim::before,
+.celula.afundado-visivel.navio-v-inicio::before,
+.celula.afundado-visivel.navio-v-meio::before,
+.celula.afundado-visivel.navio-v-fim::before {
+  box-shadow: none;
+  opacity: 0.72;
+}
+
+/* ── Mobile: compacto abaixo de 360px ────────────────────────────────────── */
+@media (max-width: 360px) {
+  .grade {
+    width:  min(calc(var(--grid-size) * 38px), calc(100vw - 1.5rem));
+    height: min(calc(var(--grid-size) * 38px), calc(100vw - 1.5rem));
+  }
+  .celula { min-width: 0; min-height: 0; }
+}

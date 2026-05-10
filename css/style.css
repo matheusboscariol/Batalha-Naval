@@ -1,0 +1,458 @@
+/* ── Variáveis CSS — Tema Naval/Militar ─────────────────────────────────── */
+:root {
+  --cor-oceano:        #0a3d62;
+  --cor-oceano-claro:  #1e5f8a;
+  --cor-oceano-hover:  #1a4f74;
+  --cor-aco:           #1e2d3d;
+  --cor-aco-claro:     #546e7a;
+  --cor-acerto:        #e74c3c;
+  --cor-erro:          #74b9ff;
+  --cor-afundado:      #c0392b;
+  --cor-navio:         #b2bec3;
+  --cor-texto:         #dfe6e9;
+  --cor-texto-suave:   #90a4ae;
+  --cor-fundo:         #07121e;
+  --cor-painel:        #0f1e2d;
+  --cor-painel-claro:  #162636;
+  --cor-borda:         #1e3a56;
+  --cor-borda-brilho:  rgba(41, 128, 185, 0.35);
+  --cor-primario:      #1a8fd1;
+  --cor-primario-hover:#1278b5;
+  --cor-sucesso:       #00b894;
+  --cor-alerta:        #f39c12;
+  --raio-borda:        6px;
+  --sombra:            0 4px 20px rgba(0,0,0,0.5);
+  --brilho-azul:       0 0 20px rgba(26, 143, 209, 0.25);
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  overflow-x: hidden;
+}
+
+/* Scanline sutil — estética display militar ─────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.04) 3px,
+    rgba(0, 0, 0, 0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ── Telas ──────────────────────────────────────────────────────────────── */
+.tela { display: none; min-height: 100vh; padding: 1rem; }
+.tela.ativa { display: flex; flex-direction: column; }
+
+/* ── Tela de Boas-Vindas ────────────────────────────────────────────────── */
+#tela-boas-vindas {
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(10, 61, 98, 0.9) 0%, transparent 65%),
+    radial-gradient(ellipse at 20% 80%, rgba(0, 30, 60, 0.6) 0%, transparent 50%),
+    linear-gradient(180deg, #07121e 0%, #0a1e30 50%, #07121e 100%);
+}
+
+/* Ondas decorativas no fundo da tela de boas-vindas */
+#tela-boas-vindas::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 180px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 40px,
+      rgba(26, 143, 209, 0.06) 40px, rgba(26, 143, 209, 0.06) 41px
+    ),
+    linear-gradient(0deg, rgba(10, 40, 70, 0.6) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.conteudo-centralizado {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.titulo-jogo {
+  font-size: clamp(2.2rem, 8vw, 4.2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ecf0f1;
+  text-shadow:
+    0 0 15px rgba(26, 143, 209, 0.7),
+    0 0 40px rgba(26, 143, 209, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  animation: pulso-titulo 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulso-titulo {
+  from { text-shadow: 0 0 15px rgba(26,143,209,0.7), 0 0 40px rgba(26,143,209,0.3), 0 2px 4px rgba(0,0,0,0.8); }
+  to   { text-shadow: 0 0 25px rgba(26,143,209,1.0), 0 0 60px rgba(26,143,209,0.5), 0 2px 4px rgba(0,0,0,0.8); }
+}
+
+.subtitulo {
+  color: var(--cor-texto-suave);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+}
+
+/* ── Cabeçalho de Fase ──────────────────────────────────────────────────── */
+.cabecalho-fase {
+  background: linear-gradient(90deg, #0c1e30 0%, #111f30 100%);
+  border-bottom: 2px solid var(--cor-borda-brilho);
+  padding: 0.65rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.cabecalho-fase h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #cfd8dc;
+}
+
+.instrucao {
+  color: var(--cor-texto-suave);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* ── Tela de Posicionamento ─────────────────────────────────────────────── */
+#tela-posicionamento { gap: 1rem; }
+
+.area-posicionamento {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+/* ── Painel de Navios ───────────────────────────────────────────────────── */
+.painel-navios {
+  background: linear-gradient(160deg, #0f1e2d 0%, #0c1825 100%);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--sombra);
+}
+
+.painel-navios h3 {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+#lista-navios {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.item-navio {
+  background: linear-gradient(145deg, #0e2a42 0%, #0a1e30 100%);
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: monospace;
+  letter-spacing: 3px;
+  color: #78909c;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+  user-select: none;
+}
+
+.item-navio:hover {
+  border-color: var(--cor-primario);
+  background: linear-gradient(145deg, #152d45, #0e2234);
+  color: #90a4ae;
+  box-shadow: 0 0 8px rgba(26, 143, 209, 0.25);
+}
+
+.item-navio.selecionado {
+  border-color: var(--cor-primario);
+  background: linear-gradient(145deg, #1a4a6e, #133554);
+  color: #cfe8f8;
+  box-shadow: 0 0 12px rgba(26, 143, 209, 0.4), inset 0 0 8px rgba(26, 143, 209, 0.15);
+}
+
+.item-navio.posicionado {
+  opacity: 0.3;
+  cursor: default;
+  pointer-events: none;
+  filter: grayscale(0.6);
+}
+
+.area-grade { display: flex; justify-content: center; align-items: flex-start; }
+
+.acoes-posicionamento {
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem;
+  gap: 0.75rem;
+}
+
+/* ── Tela de Batalha ────────────────────────────────────────────────────── */
+#tela-batalha { gap: 0.75rem; }
+
+.info-batalha {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+/* Indicador de turno */
+.indicador-turno {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--raio-borda);
+  background: linear-gradient(135deg, #00a382, #007d64);
+  color: #e0f4f0;
+  border: 1px solid rgba(0, 200, 160, 0.3);
+  box-shadow: 0 0 12px rgba(0, 184, 148, 0.3);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.indicador-turno.turno-ia {
+  background: linear-gradient(135deg, #c0392b, #922b21);
+  border-color: rgba(220, 80, 70, 0.3);
+  box-shadow: 0 0 12px rgba(192, 57, 43, 0.35);
+  animation: pulso-ia 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulso-ia {
+  from { box-shadow: 0 0 8px rgba(192,57,43,0.3); }
+  to   { box-shadow: 0 0 20px rgba(192,57,43,0.6); }
+}
+
+.info-nivel    { color: var(--cor-texto-suave); font-size: 0.82rem; letter-spacing: 0.04em; }
+.info-timer    { font-family: 'Courier New', monospace; font-size: 1rem; color: #a5bdc8; letter-spacing: 0.05em; }
+.info-pontuacao { color: var(--cor-sucesso); font-weight: 700; font-size: 0.95rem; }
+
+.arena-batalha {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  align-items: center;
+}
+
+.lado-jogador, .lado-ia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lado-jogador h3, .lado-ia h3 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cor-texto-suave);
+}
+
+.lado-ia h3 { color: rgba(231, 76, 60, 0.75); }
+
+/* ── Tela de Resultado ──────────────────────────────────────────────────── */
+#tela-resultado {
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at center, rgba(30, 45, 61, 0.9) 0%, transparent 70%),
+    linear-gradient(180deg, #07121e 0%, #0a1e30 50%, #07121e 100%);
+}
+
+.conteudo-resultado {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 480px;
+  width: 100%;
+}
+
+#mensagem-resultado {
+  font-size: clamp(1.6rem, 5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 20px rgba(26, 143, 209, 0.5);
+}
+
+.detalhes-pontuacao {
+  background: linear-gradient(160deg, #0f1e2d 0%, #0c1825 100%);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  padding: 1.25rem 1.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  box-shadow: var(--sombra), var(--brilho-azul);
+}
+
+.linha-pontuacao {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: var(--cor-texto-suave);
+}
+
+.linha-pontuacao span:last-child {
+  font-family: 'Courier New', monospace;
+  color: var(--cor-texto);
+}
+
+.linha-pontuacao.total {
+  border-top: 1px solid var(--cor-borda-brilho);
+  padding-top: 0.65rem;
+  margin-top: 0.2rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--cor-sucesso);
+}
+
+.linha-pontuacao.total span:last-child {
+  color: var(--cor-sucesso);
+  text-shadow: 0 0 10px rgba(0, 184, 148, 0.5);
+}
+
+.acoes-resultado { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+/* ── Botões ─────────────────────────────────────────────────────────────── */
+.btn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: var(--raio-borda);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  user-select: none;
+}
+
+.btn:active { transform: scale(0.96); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-primario {
+  background: linear-gradient(135deg, #1a8fd1 0%, #1060a0 100%);
+  color: #e8f4fd;
+  border: 1px solid rgba(26, 143, 209, 0.4);
+  box-shadow: 0 2px 12px rgba(26, 143, 209, 0.25);
+}
+.btn-primario:not(:disabled):hover {
+  background: linear-gradient(135deg, #1fa3ee, #1274bb);
+  box-shadow: 0 3px 18px rgba(26, 143, 209, 0.4);
+}
+
+.btn-secundario {
+  background: linear-gradient(135deg, #0f1e2d, #0c1825);
+  color: var(--cor-texto);
+  border: 1px solid var(--cor-borda);
+}
+.btn-secundario:not(:disabled):hover {
+  border-color: var(--cor-primario);
+  box-shadow: 0 0 8px rgba(26, 143, 209, 0.2);
+}
+
+/* ── Camada de animação ─────────────────────────────────────────────────── */
+#camada-animacao {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* ── Desktop ────────────────────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .area-posicionamento { flex-direction: row; align-items: flex-start; }
+  .painel-navios { max-width: 210px; }
+  .arena-batalha {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+}
+
+/* ── Botão de som (inline no cabeçalho) ─────────────────────────────────── */
+.btn-som {
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  background: rgba(15, 30, 45, 0.75);
+  color: var(--cor-texto);
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+  user-select: none;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.btn-som:hover {
+  background: rgba(26, 79, 116, 0.88);
+  border-color: var(--cor-primario);
+}
+
+.btn-som.mudo {
+  opacity: 0.4;
+}
+
+/* ── Mobile compacto ────────────────────────────────────────────────────── */
+@media (max-width: 360px) {
+  .titulo-jogo { font-size: 1.8rem; }
+  .info-batalha { gap: 0.4rem; font-size: 0.85rem; }
+}
